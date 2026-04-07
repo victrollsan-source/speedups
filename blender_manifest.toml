@@ -1,0 +1,21 @@
+schema_version = "1.0.0"
+
+id = "speed_ups"
+version = "1.0.0"
+name = "Speed Ups"
+tagline = "Automate some task in blender"
+maintainer = "Victrollsan<victrollsan@gmail.com>"
+type = "add-on"
+
+blender_version_min = "5.0.0"
+blender_version_max = "5.3.0"
+
+license = [
+  "SPDX:GPL-3.0-or-later",
+]
+
+tags = ["Import-Export","Bake"]
+
+[permissions]
+files = "Required to save the baked image on the local storage"
+
