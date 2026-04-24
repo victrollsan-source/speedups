@@ -4,6 +4,36 @@ import time
 from bpy.props import BoolProperty, StringProperty
 from bpy.props import IntProperty
 
+
+class SPEEDUPSPreferences(bpy.types.AddonPreferences):
+    bl_idname = __name__
+
+    # Master toggle for the purge options
+    show_create_textures_options: bpy.props.BoolProperty(
+        name="Show Create Textures Options",
+        description="Toggle the visibility of the Create Textures options in the UI",
+        default=True
+    )
+    # Master toggle for the multi-export options
+    show_multi_export_options: bpy.props.BoolProperty(
+        name="Show Multi-Export Options",
+        description="Enable or disable the multi-export options in the UI",
+        default=True
+    )
+    # Master toggle for the purge options
+    show_purge_options: bpy.props.BoolProperty(
+        name="Show Purge Options",
+        description="Toggle the visibility of the Purge options in the UI",
+        default=True
+    )
+
+    def draw(self, context):
+        layout = self.layout
+        layout.prop(self, "show_create_textures_options")
+        layout.prop(self, "show_multi_export_options")
+        layout.prop(self, "show_purge_options")
+
+
 def propeties():
     """Create the properties for the addon"""
     # Multibake props
@@ -881,12 +911,16 @@ class SPEEDUPS_MT_F5(bpy.types.Menu):
     bl_label = "Speed Ups"
 
     def draw(self, context):
+        addon_prefs = context.preferences.addons[__name__].preferences
         layout = self.layout
         # Add operators, properties, or sub-menus here
         layout.operator("object.multi_bake", text="Multi Bake")
-        layout.operator("file.create_textures", text="Create Textures Folder")
-        layout.operator("wm.export_multi", text="Multi Export", icon="EXPORT")
-        layout.operator("file.super_purge", text="Super Purge", icon="TRASH")
+        if addon_prefs.show_create_textures_options:
+            layout.operator("file.create_textures", text="Create Textures Folder")
+        if addon_prefs.show_multi_export_options:
+            layout.operator("wm.export_multi", text="Multi Export", icon="EXPORT")
+        if addon_prefs.show_purge_options:
+            layout.operator("file.super_purge", text="Super Purge", icon="TRASH")
 
 
 # CATEGORYY_PT_name
@@ -898,17 +932,21 @@ class PROPERTIES_PT_MainPanel(bpy.types.Panel):
     bl_category = 'Speed Ups'
 
     def draw(self, context):
+        addon_prefs = context.preferences.addons[__name__].preferences
         layout = self.layout
         row = layout.row()
         row.label(text= "Press F5 for quick actions", icon="INFO")
         col = layout.column()
         col.operator("object.multi_bake", text="Multi Bake")
-        col = layout.column()
-        col.operator("file.create_textures", text="Create Textures Folder")
-        col = layout.column()
-        col.operator("wm.export_multi", text="Multi Export", icon="EXPORT")
-        col = layout.column()
-        col.operator("file.super_purge", text="Super Purge", icon="TRASH")
+        if addon_prefs.show_create_textures_options:
+            col = layout.column()
+            col.operator("file.create_textures", text="Create Textures Folder")
+        if addon_prefs.show_multi_export_options:
+            col = layout.column()
+            col.operator("wm.export_multi", text="Multi Export", icon="EXPORT")
+        if addon_prefs.show_purge_options:
+            col = layout.column()
+            col.operator("file.super_purge", text="Super Purge", icon="TRASH")
 
 
 # CATEGORYY_PT_name
@@ -994,13 +1032,20 @@ class PROPERTIES_PT_multi_export(bpy.types.Panel):
     bl_region_type = 'UI'
     bl_category = 'Speed Ups'
     bl_idname = "VIEW3D_PT_multi_export_panel"
-    bl_label = "Speed Ups Export Options"
+    bl_label = "Multi Export Options"
     bl_parent_id = "SPEEDUPS_PT_MAINPANEL"
     bl_options = {'DEFAULT_CLOSED'}
 
 
+    @classmethod
+    def poll(cls, context):
+        # Access the preference toggle
+        addon_prefs = context.preferences.addons[__name__].preferences
+        return addon_prefs.show_multi_export_options
+
+
     def draw(self, context):
-        """define the layout of the panel"""
+        # This only runs if poll() returns True
         layout = self.layout
         scene = context.scene
         layout.prop(scene, "alembic_prop")
@@ -1016,6 +1061,7 @@ addon_keymaps = []
 
 
 classes = [
+    SPEEDUPSPreferences,
     SPEEDUPS_OT_SuperPurge,
     SPEEDUPS_OT_Multiexport,
     SPEEDUPS_OT_CreateTextures,
