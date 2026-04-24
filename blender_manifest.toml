@@ -1,11 +1,17 @@
 schema_version = "1.0.0"
 
 id = "speed_ups"
-version = "1.0.0"
+version = "1.0.1"
 name = "Speed Ups"
-tagline = "Automate some task in blender"
+tagline = "Automate pbr baking task from principled shader and exports"
 maintainer = "Victrollsan<victrollsan@gmail.com>"
 type = "add-on"
+
+# Primary website/documentation link
+website = "https://github.com/victrollsan-source/speedups/releases"
+
+# Dedicated bug reporting link (GitHub/GitLab issues, etc.)
+bug_report_url = "https://github.com/victrollsan-source/speedups/issues"
 
 blender_version_min = "5.0.0"
 blender_version_max = "5.3.0"

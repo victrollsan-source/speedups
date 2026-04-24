@@ -908,7 +908,7 @@ class PROPERTIES_PT_MainPanel(bpy.types.Panel):
         col = layout.column()
         col.operator("wm.export_multi", text="Multi Export", icon="EXPORT")
         col = layout.column()
-        col.operator("file.super_purge", text="Purge Anywhere", icon="TRASH")
+        col.operator("file.super_purge", text="Super Purge", icon="TRASH")
 
 
 # CATEGORYY_PT_name
@@ -968,6 +968,7 @@ class PROPERTIES_PT_bake_material(bpy.types.Panel):
         layout = self.layout
         scene = context.scene
         cycles = scene.cycles
+        bake_settings = scene.render.bake
 
         layout.label(text="Options for baking:")
         layout.prop(scene, "texture_name_prop", text="Texture Prefix")
@@ -977,6 +978,11 @@ class PROPERTIES_PT_bake_material(bpy.types.Panel):
         col.prop(cycles, "samples", text="")
         col = layout.column()
         col.prop(scene.render.bake, "use_selected_to_active", text="Selected to Active")
+
+        col.prop(bake_settings, "use_clear", text="Clear Image")
+        col.prop(bake_settings, "margin", text="Margin Size")
+
+
 
 
 # CATEGORYY_PT_name
